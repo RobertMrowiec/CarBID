@@ -16,6 +16,9 @@ exports.add = defaultResponse(async req => {
     return !result.length ? new User(req.body).save() : result
 })
 
-exports.update = defaultResponse(req => User.findByIdAndUpdate(req.params.id, req.body, {new: true}))
+exports.update = defaultResponse(async req => {
+    const result = await userValidate(req.body)
+    return !result.length ? User.findByIdAndUpdate(req.params.id, req.body, {new: true}) : result
+})
 
 exports.delete = defaultResponse(req => User.findByIdAndDelete(req.params.id))
