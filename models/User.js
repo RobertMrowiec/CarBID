@@ -6,7 +6,7 @@ const UserSchema = new Schema({
     email: { type: String, required: true },
     password: { type: String, required: true },
     auctions: [{ type: Schema.Types.ObjectId, ref: 'Auctions'}],
-    auctions: [{ type: Schema.Types.ObjectId, ref: 'Auctions'}],
+    offers: [{ type: Schema.Types.ObjectId, ref: 'Offers'}],
 }, { timestamps: true })
 
 module.exports = mongoose.model('User', UserSchema)
