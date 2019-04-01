@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const CarSchema = new Mongoose.Schema({
+const CarSchema = new Schema({
     assembledAt: { type: Date, default: Date.now() },
     brand: { type: String, required: true },
     horsePower: Number,
