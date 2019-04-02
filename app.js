@@ -12,6 +12,6 @@ app.use('/api/users', require('./routing/users/route'))
 app.use('/api/cars', require('./routing/cars/route'))
 app.use('/api/auctions', require('./routing/auctions/route'))
 
-return mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true }).then(x => {
+return mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true }).then(() => {
     return app.listen(8007, () => console.log('Server is running on port: 8007'))
 })

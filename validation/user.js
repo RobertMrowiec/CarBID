@@ -6,7 +6,9 @@ const userValidate = (body) => {
         email: Joi.string().regex(/([a-z][a-zA-Z0-9.-])\w+[@]+(herecars.com)/)
     }).unknown()
 
-    return Joi.validate(body, UserSchema).then(x => x).catch(validationError => validationError.details.map(d => d.message))
+    return Joi.validate(body, UserSchema)
+        .then(validationResult => validationResult)
+        .catch(validationError => validationError.details.map(d => d.message))
 }
 
 module.exports.userValidate = userValidate

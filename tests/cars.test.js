@@ -4,20 +4,24 @@ let carId
 
 describe('GET Cars', () => {
     test('Get cars', () => {
-        return fetch(`${url}/cars`).then(x => x.json()).then(x => {
+        return fetch(`${url}/cars`)
+        .then(result => result.json())
+        .then(cars => {
             expect(200)
-            expect(Array.isArray(x)).toBeTruthy()
-            expect(x[0]._id).toBeDefined()
-            carId = x[0]._id
+            expect(Array.isArray(cars)).toBeTruthy()
+            expect(cars[0]._id).toBeDefined()
+            carId = cars[0]._id
         })
     })
 })
 
 describe('GET Car by ID', () => {
     test('Get car by ID', () => {
-        return fetch(`${url}/cars/${carId}`).then(x => x.json()).then(x => {
+        return fetch(`${url}/cars/${carId}`)
+        .then(result => result.json())
+        .then(car => {
             expect(200)
-            expect(x._id).toEqual(carId)
+            expect(car._id).toEqual(carId)
         })
     })
 })
@@ -36,10 +40,12 @@ describe('POST Cars', () => {
                 horsePower: 100,
                 maxTorque: 200
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual([`\"brand\" is required`])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual([`\"brand\" is required`])
         })
     })
     test('throw error if model is undefined', () => {
@@ -55,10 +61,12 @@ describe('POST Cars', () => {
                 horsePower: 100,
                 maxTorque: 200
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(["\"model\" is required"])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(["\"model\" is required"])
         })
     })
     test('throw error if horsePower is negative', () => {
@@ -75,10 +83,12 @@ describe('POST Cars', () => {
                 horsePower: -100,
                 maxTorque: 200
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(["\"horsePower\" must be larger than or equal to 0"])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(["\"horsePower\" must be larger than or equal to 0"])
         })
     })
     test('throw error if maxTorque is negative', () => {
@@ -95,10 +105,12 @@ describe('POST Cars', () => {
                 horsePower: 100,
                 maxTorque: -200
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(["\"maxTorque\" must be larger than or equal to 0"])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(["\"maxTorque\" must be larger than or equal to 0"])
         })
     })
 
@@ -116,81 +128,93 @@ describe('POST Cars', () => {
                 horsePower: 100,
                 maxTorque: 200
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(car => {
             expect(200)
-            expect(x._id).toBeDefined()
-            expect(x.model).toEqual('S')
-            expect(x.brand).toEqual('Tesla')
-            expect(x.maxTorque).toEqual(200)
+            expect(car._id).toBeDefined()
+            expect(car.model).toEqual('S')
+            expect(car.brand).toEqual('Tesla')
+            expect(car.maxTorque).toEqual(200)
         })
     })
 })
 
-// describe('Update Car by ID', () => {
-//     test('should edit car if body data match validations', () => {
-//         return fetch(`${url}/cars/${carId}`, {
-//             method: 'PUT',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },          
-//             body: JSON.stringify({
-//                 email: 'test123@herecars.com',
-//                 name: 'secondtest',
-//                 password: 'secondhello123'
-//             })
-//         }).then(x => x.json()).then(x => {
-//             expect(200)
-//             expect(x._id).toBeDefined()
-//             expect(x.email).toEqual('test123@herecars.com')
-//             expect(x.name).toEqual('secondtest')
-//             expect(x.password).toEqual('secondhello123')
-//         })
-//     })
-//     test('throw error if email is invalid during editing car', () => {
-//         return fetch(`${url}/cars/${carId}`, {
-//             method: 'PUT',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },          
-//             body: JSON.stringify({
-//                 email: 'test@hecars.com',
-//                 name: 'hellothere',
-//                 password: 'hello123'
-//             })
-//         }).then(x => x.json()).then(x => {
-//             expect(400)
-//             expect(Array.isArray(x)).toEqual(true)
-//             expect(x).toEqual(['"email" with value "test@hecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
-//         })
-//     })
+describe('Update Car by ID', () => {
+    test('should edit car if body data match validations', () => {
+        return fetch(`${url}/cars/${carId}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },          
+            body: JSON.stringify({
+                brand: 'Tesla',
+                model: '3',
+                assembledAt: new Date(),
+                horsePower: 100,
+                maxTorque: 200
+            })
+        })
+        .then(result => result.json())
+        .then(car => {
+            expect(200)
+            expect(car._id).toBeDefined()
+            expect(car.brand).toEqual('Tesla')
+            expect(car.model).toEqual('3')
+            expect(car.horsePower).toEqual(100)
+        })
+    })
+    test('throw error if horsePower is less than 0 during editing car', () => {
+        return fetch(`${url}/cars/${carId}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },          
+            body: JSON.stringify({
+                brand: 'Tesla',
+                model: '3',
+                assembledAt: new Date(),
+                horsePower: -100,
+                maxTorque: 200
+            })
+        }).then(result => result.json()).then(result => {
+            expect(400)
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(["\"horsePower\" must be larger than or equal to 0"])
+        })
+    })
 
-//     test('throw error if password is invalid during editing car', () => {
-//         return fetch(`${url}/cars/${carId}`, {
-//             method: 'PUT',
-//             headers: {
-//                 'Accept': 'application/json',
-//                 'Content-Type': 'application/json'
-//             },          
-//             body: JSON.stringify({
-//                 email: 'test@herecars.com',
-//                 name: 'hellothere',
-//                 password: 'qwe'
-//             })
-//         }).then(x => x.json()).then(x => {
-//             expect(400)
-//             expect(Array.isArray(x)).toEqual(true)
-//             expect(x).toEqual(['"password" length must be at least 6 characters long'])
-//         })
-//     })
-// })
+    test('throw error if password is invalid during editing car', () => {
+        return fetch(`${url}/cars/${carId}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },          
+            body: JSON.stringify({
+                brand: 'Tesla',
+                model: '3',
+                assembledAt: new Date(),
+                horsePower: 100,
+                maxTorque: -200
+            })
+        }).then(result => result.json()).then(result => {
+            expect(400)
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(["\"maxTorque\" must be larger than or equal to 0"])
+        })
+    })
+})
 
-// describe('Delete Car by ID', () => {
-//     test('Delete car by ID', () => {
-//         return fetch(`${url}/cars/${carId}`, { method: 'DELETE' }).then(x => x.json()).then(x => {
-//             expect(200)
-//             expect(x._id).toEqual(carId)
-//         })
-//     })
-// })
+describe('Delete Car by ID', () => {
+    test('Delete car by ID', () => {
+        return fetch(`${url}/cars/${carId}`, { method: 'DELETE' })
+        .then(result => result.json())
+        .then(car => {
+            expect(200)
+            expect(car._id).toEqual(carId)
+        })
+    })
+})

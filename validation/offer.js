@@ -5,6 +5,8 @@ const offerValidate = (body) => {
         price: Joi.number().min(0)
     }).unknown()
 
-    return Joi.validate(body, OfferSchema).then(x => x).catch(err => err.details.map(d => d.message))
+    return Joi.validate(body, OfferSchema)
+        .then(validationResult => validationResult)
+        .catch(err => err.details.map(d => d.message))
 }
 module.exports.offerValidate = offerValidate

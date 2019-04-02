@@ -8,6 +8,8 @@ const carValidate = (body) => {
         model: Joi.string().required()
     }).unknown()
 
-    return Joi.validate(body, CarSchema).then(x => x).catch(validationError => validationError.details.map(d => d.message))
+    return Joi.validate(body, CarSchema)
+        .then(validationResult => validationResult)
+        .catch(validationError => validationError.details.map(d => d.message))
 }
 module.exports.carValidate = carValidate
