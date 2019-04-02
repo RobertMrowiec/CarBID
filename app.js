@@ -9,6 +9,7 @@ app.use(cors('*'))
 app.use(bodyParser.json())
 
 app.use('/api/users', require('./routing/users/route'))
+app.use('/api/cars', require('./routing/cars/route'))
 app.use('/api/auctions', require('./routing/auctions/route'))
 
 return mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true }).then(x => {
