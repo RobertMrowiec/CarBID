@@ -1,6 +1,14 @@
 const fetch = require('node-fetch')
+const { seedUsers } = require('../seeds/users')
+const mongoose = require('mongoose')
 const url = 'http://localhost:8007/api'
 let userId
+
+beforeAll(() => {
+    mongoose.connect('mongodb://localhost/carbid').then(() => {
+        seedUsers()
+    })
+})
 
 describe('GET Users', () => {
     test('Get users', () => {
