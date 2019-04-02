@@ -2,9 +2,9 @@ const Auction = require('../../models/Auction')
 const { defaultResponse } = require('../common')
 const { auctionValidate } = require('../../validation/auction')
 
-exports.get = defaultResponse(() => Auction.find().populate('car').populate('offer'))
+exports.get = defaultResponse(() => Auction.find().populate('car'))
 
-exports.getById = defaultResponse(req => Auction.findById(req.params.id).populate('car').populate('offer'))
+exports.getById = defaultResponse(req => Auction.findById(req.params.id).populate('car'))
 
 exports.pagination = defaultResponse(req => {
     const limit = Number(req.params.limit)

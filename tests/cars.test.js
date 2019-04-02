@@ -1,20 +1,10 @@
 const fetch = require('node-fetch')
-const { seedCars } = require('../seeds/seed')
-const { generateToken } = require('./token')
-const Car = require('../models/Car')
-const mongoose = require('mongoose')
 const url = 'http://localhost:8007/api'
-let token
 let carId
-
-beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-    .then(() => Car.deleteMany({}))
-    .then(async () => token = await generateToken())
-    .then(() => seedCars()))
 
 describe('GET Cars', () => {
     test('Get cars', () => {
-        return fetch(`${url}/cars`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/cars`)
         .then(result => result.json())
         .then(cars => {
             expect(200)
@@ -27,7 +17,7 @@ describe('GET Cars', () => {
 
 describe('GET Car by ID', () => {
     test('Get car by ID', () => {
-        return fetch(`${url}/cars/${carId}`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/cars/${carId}`)
         .then(result => result.json())
         .then(car => {
             expect(200)
@@ -42,8 +32,7 @@ describe('POST Cars', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 model: 'S',
@@ -64,8 +53,7 @@ describe('POST Cars', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -86,8 +74,7 @@ describe('POST Cars', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -109,8 +96,7 @@ describe('POST Cars', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -133,8 +119,7 @@ describe('POST Cars', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -161,8 +146,7 @@ describe('Update Car by ID', () => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -186,8 +170,7 @@ describe('Update Car by ID', () => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -208,8 +191,7 @@ describe('Update Car by ID', () => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 brand: 'Tesla',
@@ -228,7 +210,7 @@ describe('Update Car by ID', () => {
 
 describe('Delete Car by ID', () => {
     test('Delete car by ID', () => {
-        return fetch(`${url}/cars/${carId}`, { method: 'DELETE', headers: {'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/cars/${carId}`, { method: 'DELETE' })
         .then(result => result.json())
         .then(car => {
             expect(200)
