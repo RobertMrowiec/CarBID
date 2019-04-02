@@ -2,9 +2,9 @@ const User = require('../../models/User')
 const { defaultResponse } = require('../common')
 const { userValidate } = require('../../validation/user')
 
-exports.get = defaultResponse(() => User.find())
+exports.get = defaultResponse(() => User.find().populate('auctions').populate('car'))
 
-exports.getById = defaultResponse(req => User.findById(req.params.id))
+exports.getById = defaultResponse(req => User.findById(req.params.id).populate('auctions').populate('car'))
 
 exports.pagination = defaultResponse(req => {
     const limit = Number(req.params.limit)
