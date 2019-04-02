@@ -3,8 +3,7 @@ const cors = require('cors')
 const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-const jwt = require('jsonwebtoken')
-
+const { middlewareLogin } = require('./middleware')
 const app = express()
 
 dotenv.config()
@@ -12,19 +11,7 @@ dotenv.config()
 app.use(cors('*'))
 app.use(bodyParser.json())
 
-app.use((req, res, next) => {
-    if (req.url.startsWith('/api')) {
-        if (req.headers.authorization) {
-            let token = req.headers.authorization.split(' ')[1]
-            jwt.verify(token, process.env.privateKey, (err, decoded) => {
-                err ? res.status(403).json("Authorization failed") : next()
-            })
-        } else {
-            return res.status(403).json("Authorization failed")
-        }
-    } else next()
-})
-  
+app.use((req, res, next) => middlewareLogin(req, res, next))
   
 app.use('/api/users', require('./routing/users/route'))
 app.use('/api/cars', require('./routing/cars/route'))
