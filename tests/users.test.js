@@ -6,6 +6,7 @@ let userId
 describe('GET Users', () => {
     test('Get users', () => {
         return fetch(`${url}/users`).then(x => x.json()).then(x => {
+            expect(200)
             expect(Array.isArray(x)).toBeTruthy()
             expect(x[0]._id).toBeDefined()
             userId = x[0]._id
@@ -16,6 +17,7 @@ describe('GET Users', () => {
 describe('GET User by ID', () => {
     test('Get user by ID', () => {
         return fetch(`${url}/users/${userId}`).then(x => x.json()).then(x => {
+            expect(200)
             expect(x._id).toEqual(userId)
         })
     })
@@ -35,6 +37,7 @@ describe('POST Users', () => {
                 password: 'hello'
             })
         }).then(x => x.json()).then(x => {
+            expect(400)
             expect(Array.isArray(x)).toEqual(true)
             expect(x).toEqual(['"password" with value "hello" fails to match the required pattern: /^[a-zA-Z0-9]{6,}/'])
         })
@@ -52,6 +55,7 @@ describe('POST Users', () => {
                 password: 'hello123'
             })
         }).then(x => x.json()).then(x => {
+            expect(400)
             expect(Array.isArray(x)).toEqual(true)
             expect(x).toEqual(['"email" with value "test@herrecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
         })
@@ -68,6 +72,7 @@ describe('POST Users', () => {
                 password: 'hello123'
             })
         }).then(x => x.json()).then(x => {
+            expect(400)
             expect(x.errors).toBeDefined()
             expect(x.errors.name.message).toEqual('Path `name` is required.')
         })
@@ -85,6 +90,7 @@ describe('POST Users', () => {
                 password: 'hello123'
             })
         }).then(x => x.json()).then(x => {
+            expect(200)
             expect(x._id).toBeDefined()
             expect(x.name).toEqual('hellothere')
             expect(x.password).toEqual('hello123')
@@ -107,6 +113,7 @@ describe('Update User by ID', () => {
                 password: 'secondhello123'
             })
         }).then(x => x.json()).then(x => {
+            expect(200)
             expect(x._id).toBeDefined()
             expect(x.email).toEqual('test123@herecars.com')
             expect(x.name).toEqual('secondtest')
@@ -126,6 +133,7 @@ describe('Update User by ID', () => {
                 password: 'hello123'
             })
         }).then(x => x.json()).then(x => {
+            expect(400)
             expect(Array.isArray(x)).toEqual(true)
             expect(x).toEqual(['"email" with value "test@hecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
         })
@@ -144,6 +152,7 @@ describe('Update User by ID', () => {
                 password: 'qwe'
             })
         }).then(x => x.json()).then(x => {
+            expect(400)
             expect(Array.isArray(x)).toEqual(true)
             expect(x).toEqual(['"password" with value "qwe" fails to match the required pattern: /^[a-zA-Z0-9]{6,}/'])
         })
@@ -153,6 +162,7 @@ describe('Update User by ID', () => {
 describe('Delete User by ID', () => {
     test('Delete user by ID', () => {
         return fetch(`${url}/users/${userId}`, { method: 'DELETE' }).then(x => x.json()).then(x => {
+            expect(200)
             expect(x._id).toEqual(userId)
         })
     })
