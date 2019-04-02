@@ -1,20 +1,17 @@
 const fetch = require('node-fetch')
-const { seedUsers } = require('../seeds/seed')
-const { generateToken } = require('./token')
+const { seedUsers } = require('../seeds/users')
 const User = require('../models/User')
 const mongoose = require('mongoose')
 const url = 'http://localhost:8007/api'
-let token
+
 let userId
 
 beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-    .then(() => User.deleteMany({}))
-    .then(async () => token = await generateToken())
-    .then(() => seedUsers()))
+    .then(() => User.deleteMany({})).then(() => seedUsers()))
 
 describe('GET Users', () => {
     test('Get users', () => {
-        return fetch(`${url}/users`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/users`)
         .then(result => result.json())
         .then(users => {
             expect(200)
@@ -27,7 +24,7 @@ describe('GET Users', () => {
 
 describe('GET User by ID', () => {
     test('Get user by ID', () => {
-        return fetch(`${url}/users/${userId}`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/users/${userId}`)
         .then(result => result.json())
         .then(user => {
             expect(200)
@@ -42,8 +39,7 @@ describe('POST Users', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@herecars.com',
@@ -63,8 +59,7 @@ describe('POST Users', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@herrecars.com',
@@ -84,8 +79,7 @@ describe('POST Users', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@herecars.com',
@@ -104,8 +98,7 @@ describe('POST Users', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@herecars.com',
@@ -118,43 +111,19 @@ describe('POST Users', () => {
             expect(200)
             expect(user._id).toBeDefined()
             expect(user.name).toEqual('hellothere')
-            expect(user.password).not.toEqual('hello123')
+            expect(user.password).toEqual('hello123')
             expect(user.email).toEqual('test@herecars.com')
         })
     })
 })
 
-describe('LOGIN User', () => {
-    test('login user if credentials are valid', () => {
-        return fetch(`http://localhost:8007/login`, {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },          
-            body: JSON.stringify({
-                email: 'test@herecars.com',
-                password: 'hello123'
-            })
-        })
-        .then(result => result.json())
-        .then(result => {
-            expect(result.token).toBeDefined()
-            expect(result.user.email).toEqual('test@herecars.com')
-            expect(result.user.password).not.toEqual('hello123')
-            expect(200)
-        })
-    
-    })
-})
 describe('Update User by ID', () => {
     test('should edit user if body data match validations', () => {
         return fetch(`${url}/users/${userId}`, {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test123@herecars.com',
@@ -176,8 +145,7 @@ describe('Update User by ID', () => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@hecars.com',
@@ -198,8 +166,7 @@ describe('Update User by ID', () => {
             method: 'PUT',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },          
             body: JSON.stringify({
                 email: 'test@herecars.com',
@@ -218,7 +185,7 @@ describe('Update User by ID', () => {
 
 describe('Delete User by ID', () => {
     test('Delete user by ID', () => {
-        return fetch(`${url}/users/${userId}`, { method: 'DELETE', headers: {'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/users/${userId}`, { method: 'DELETE' })
             .then(result => result.json())
             .then(user => {
                 expect(200)
