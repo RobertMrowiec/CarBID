@@ -1,23 +1,34 @@
 const fetch = require('node-fetch')
+const { seedUsers } = require('../seeds/users')
+const User = require('../models/User')
+const mongoose = require('mongoose')
 const url = 'http://localhost:8007/api'
+
 let userId
+
+beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
+    .then(() => User.deleteMany({})).then(() => seedUsers()))
 
 describe('GET Users', () => {
     test('Get users', () => {
-        return fetch(`${url}/users`).then(x => x.json()).then(x => {
+        return fetch(`${url}/users`)
+        .then(result => result.json())
+        .then(users => {
             expect(200)
-            expect(Array.isArray(x)).toBeTruthy()
-            expect(x[0]._id).toBeDefined()
-            userId = x[0]._id
+            expect(Array.isArray(users)).toBeTruthy()
+            expect(users[0]._id).toBeDefined()
+            userId = users[0]._id
         })
     })
 })
 
 describe('GET User by ID', () => {
     test('Get user by ID', () => {
-        return fetch(`${url}/users/${userId}`).then(x => x.json()).then(x => {
+        return fetch(`${url}/users/${userId}`)
+        .then(result => result.json())
+        .then(user => {
             expect(200)
-            expect(x._id).toEqual(userId)
+            expect(user._id).toEqual(userId)
         })
     })
 })
@@ -35,10 +46,12 @@ describe('POST Users', () => {
                 name: 'hellothere',
                 password: 'hello'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"password" length must be at least 6 characters long'])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
     test('throw error if email is invalid', () => {
@@ -53,10 +66,12 @@ describe('POST Users', () => {
                 name: 'hellothere',
                 password: 'hello123'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"email" with value "test@herrecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(['"email" with value "test@herrecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
         })
     })
     test('throw error if name is not presented', () => {
@@ -70,10 +85,12 @@ describe('POST Users', () => {
                 email: 'test@herecars.com',
                 password: 'hello123'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x.errors).toBeDefined()
-            expect(x.errors.name.message).toEqual('Path `name` is required.')
+            expect(result.errors).toBeDefined()
+            expect(result.errors.name.message).toEqual('Path `name` is required.')
         })
     })
     test('should add user to db if body data passes a validation', () => {
@@ -88,12 +105,14 @@ describe('POST Users', () => {
                 name: 'hellothere',
                 password: 'hello123'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(user => {
             expect(200)
-            expect(x._id).toBeDefined()
-            expect(x.name).toEqual('hellothere')
-            expect(x.password).toEqual('hello123')
-            expect(x.email).toEqual('test@herecars.com')
+            expect(user._id).toBeDefined()
+            expect(user.name).toEqual('hellothere')
+            expect(user.password).toEqual('hello123')
+            expect(user.email).toEqual('test@herecars.com')
         })
     })
 })
@@ -111,12 +130,14 @@ describe('Update User by ID', () => {
                 name: 'secondtest',
                 password: 'secondhello123'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(user => {
             expect(200)
-            expect(x._id).toBeDefined()
-            expect(x.email).toEqual('test123@herecars.com')
-            expect(x.name).toEqual('secondtest')
-            expect(x.password).toEqual('secondhello123')
+            expect(user._id).toBeDefined()
+            expect(user.email).toEqual('test123@herecars.com')
+            expect(user.name).toEqual('secondtest')
+            expect(user.password).toEqual('secondhello123')
         })
     })
     test('throw error if email is invalid during editing user', () => {
@@ -131,10 +152,12 @@ describe('Update User by ID', () => {
                 name: 'hellothere',
                 password: 'hello123'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"email" with value "test@hecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(['"email" with value "test@hecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
         })
     })
 
@@ -150,19 +173,23 @@ describe('Update User by ID', () => {
                 name: 'hellothere',
                 password: 'qwe'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"password" length must be at least 6 characters long'])
+            expect(Array.isArray(result)).toEqual(true)
+            expect(result).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
 })
 
 describe('Delete User by ID', () => {
     test('Delete user by ID', () => {
-        return fetch(`${url}/users/${userId}`, { method: 'DELETE' }).then(x => x.json()).then(x => {
-            expect(200)
-            expect(x._id).toEqual(userId)
-        })
+        return fetch(`${url}/users/${userId}`, { method: 'DELETE' })
+            .then(result => result.json())
+            .then(user => {
+                expect(200)
+                expect(user._id).toEqual(userId)
+            })
     })
 })

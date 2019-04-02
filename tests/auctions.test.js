@@ -1,25 +1,26 @@
 const fetch = require('node-fetch')
 
 const url = 'http://localhost:8007/api'
-let auctionId
 let carId = '5ca324bc6efe0c381019c229'
+let auctionId
 
 describe('GET auctions', () => {
     test('get array of auctions', () => {
-        return fetch(`${url}/auctions`).then(x => x.json()).then(x => {
+        return fetch(`${url}/auctions`).then(result => result.json()).then(auctions => {
             expect(200)
-            expect(Array.isArray(x)).toBeTruthy()
-            auctionId = x[0]._id
-            // carId = x[0].car._id //from populate field
+            expect(Array.isArray(auctions)).toBeTruthy()
+            auctionId = auctions[0]._id
         })
     })
 })
 describe('GET auction by ID', () => {
     test('get one auction by ID', () => {
-        return fetch(`${url}/auctions/${auctionId}`).then(x => x.json()).then(x => {
-            expect(200)
-            expect(x._id).toEqual(auctionId)
-        })
+        return fetch(`${url}/auctions/${auctionId}`)
+            .then(result => result.json())
+            .then(auction => {
+                expect(200)
+                expect(auction._id).toEqual(auctionId)
+            })
     })
 })
 
@@ -38,10 +39,12 @@ describe('ADD auctions', () => {
                 car: carId,
                 minimalPrice: 10
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(auction => {
             expect(200)
-            expect(x._id).toBeDefined()
-            expect(x.name).toEqual('test')
+            expect(auction._id).toBeDefined()
+            expect(auction.name).toEqual('test')
         })
     })
     test('throw error if name is not defined', () => {
@@ -56,9 +59,11 @@ describe('ADD auctions', () => {
                 image: 'test.png',
                 car: carId
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(["\"name\" is required"])
+            expect(result).toEqual(["\"name\" is required"])
         })
     })
     test('throw error if description is not defined', () => {
@@ -73,9 +78,11 @@ describe('ADD auctions', () => {
                 image: 'test.png',
                 car: carId
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(["\"description\" is required"])
+            expect(result).toEqual(["\"description\" is required"])
         })
     })
     test('throw error if description length is more than 200 chars', () => {
@@ -91,9 +98,11 @@ describe('ADD auctions', () => {
                 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu ultricies justo. Mauris sollicitudin, nisl sit amet ornare vestibulum, nisl leo ultricies felis, eget hendrerit orci mi non dolor. Quisque',
                 car: carId
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(['\"description\" length must be less than or equal to 200 characters long'])
+            expect(result).toEqual(['\"description\" length must be less than or equal to 200 characters long'])
         })
     })
     test('throw error if image is not defined', () => {
@@ -108,9 +117,11 @@ describe('ADD auctions', () => {
                 description: 'test',
                 car: carId
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(["\"image\" is required"])
+            expect(result).toEqual(["\"image\" is required"])
         })
     })
     test('throw error if car is not defined', () => {
@@ -125,9 +136,11 @@ describe('ADD auctions', () => {
                 image: 'test.png',
                 description: 'test'
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual([`\"car\" is required`])
+            expect(result).toEqual([`\"car\" is required`])
         })
     })
     test('throw error if minimalPrice is negative', () => {
@@ -144,9 +157,11 @@ describe('ADD auctions', () => {
                 car: carId,
                 minimalPrice: -10
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(["\"minimalPrice\" must be larger than or equal to 0"])
+            expect(result).toEqual(["\"minimalPrice\" must be larger than or equal to 0"])
         })
     })
 })
@@ -166,10 +181,12 @@ describe('Update auction', () => {
                 car: carId,
                 minimalPrice: 15
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(auction => {
             expect(200)
-            expect(x._id).toBeDefined()
-            expect(x.name).toEqual('test2')
+            expect(auction._id).toBeDefined()
+            expect(auction.name).toEqual('test2')
         })
     })
     test('throw error if description length is more than 200 chars', () => {
@@ -185,9 +202,11 @@ describe('Update auction', () => {
                 description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu ultricies justo. Mauris sollicitudin, nisl sit amet ornare vestibulum, nisl leo ultricies felis, eget hendrerit orci mi non dolor. Quisque',
                 car: carId
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(['"description" length must be less than or equal to 200 characters long'])
+            expect(result).toEqual(['"description" length must be less than or equal to 200 characters long'])
         })
     })
     test('throw error if minimalPrice is negative', () => {
@@ -204,18 +223,22 @@ describe('Update auction', () => {
                 car: carId,
                 minimalPrice: -10
             })
-        }).then(x => x.json()).then(x => {
+        })
+        .then(result => result.json())
+        .then(result => {
             expect(400)
-            expect(x).toEqual(["\"minimalPrice\" must be larger than or equal to 0"])
+            expect(result).toEqual(["\"minimalPrice\" must be larger than or equal to 0"])
         })
     })
 })
 
 describe('DELETE auctions', () => {
     test('remove auction by it`s ID', () => {
-        return fetch(`${url}/auctions/${auctionId}`, { method: 'DELETE' }).then(x => x.json()).then(x => {
-            expect(200)
-            expect(x._id).toEqual(auctionId)
-        })
+        return fetch(`${url}/auctions/${auctionId}`, { method: 'DELETE' })
+            .then(result => result.json())
+            .then(auction => {
+                expect(200)
+                expect(auction._id).toEqual(auctionId)
+            })
     })
 })
