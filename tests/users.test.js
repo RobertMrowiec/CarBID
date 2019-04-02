@@ -1,5 +1,4 @@
 const fetch = require('node-fetch')
-
 const url = 'http://localhost:8007/api'
 let userId
 
@@ -39,7 +38,7 @@ describe('POST Users', () => {
         }).then(x => x.json()).then(x => {
             expect(400)
             expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"password" with value "hello" fails to match the required pattern: /^[a-zA-Z0-9]{6,}/'])
+            expect(x).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
     test('throw error if email is invalid', () => {
@@ -154,7 +153,7 @@ describe('Update User by ID', () => {
         }).then(x => x.json()).then(x => {
             expect(400)
             expect(Array.isArray(x)).toEqual(true)
-            expect(x).toEqual(['"password" with value "qwe" fails to match the required pattern: /^[a-zA-Z0-9]{6,}/'])
+            expect(x).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
 })
