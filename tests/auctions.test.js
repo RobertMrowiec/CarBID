@@ -1,27 +1,12 @@
 const fetch = require('node-fetch')
-const { seedAuctions } = require('../seeds/seed')
-const { generateToken } = require('./token')
-const Auction = require('../models/Auction')
-const Car = require('../models/Car')
-const mongoose = require('mongoose')
+
 const url = 'http://localhost:8007/api'
 let carId = '5ca324bc6efe0c381019c229'
-let token
 let auctionId
-
-beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-    .then(() => Auction.deleteMany({}))
-    .then(async () => token = await generateToken())
-    .then(async () => {
-        const tempCar = await Car.findOne()
-        return seedAuctions(tempCar._id)
-    })
-)
 
 describe('GET auctions', () => {
     test('get array of auctions', () => {
-        return fetch(`${url}/auctions`, { headers: { 'Authorization': `Bearer ${token}`}})
-        .then(result => result.json()).then(auctions => {
+        return fetch(`${url}/auctions`).then(result => result.json()).then(auctions => {
             expect(200)
             expect(Array.isArray(auctions)).toBeTruthy()
             auctionId = auctions[0]._id
@@ -30,7 +15,7 @@ describe('GET auctions', () => {
 })
 describe('GET auction by ID', () => {
     test('get one auction by ID', () => {
-        return fetch(`${url}/auctions/${auctionId}`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/auctions/${auctionId}`)
             .then(result => result.json())
             .then(auction => {
                 expect(200)
@@ -45,8 +30,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -68,8 +52,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 description: 'test',
@@ -88,8 +71,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -108,8 +90,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -129,8 +110,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -149,8 +129,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -169,8 +148,7 @@ describe('ADD auctions', () => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -194,8 +172,7 @@ describe('Update auction', () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test2',
@@ -217,8 +194,7 @@ describe('Update auction', () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -238,8 +214,7 @@ describe('Update auction', () => {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Accept': 'application/json'
             },
             body: JSON.stringify({
                 name: 'test',
@@ -259,7 +234,7 @@ describe('Update auction', () => {
 
 describe('DELETE auctions', () => {
     test('remove auction by it`s ID', () => {
-        return fetch(`${url}/auctions/${auctionId}`, { method: 'DELETE', headers: {'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/auctions/${auctionId}`, { method: 'DELETE' })
             .then(result => result.json())
             .then(auction => {
                 expect(200)
