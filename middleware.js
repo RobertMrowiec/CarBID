@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 
-module.exports.middlewareLogin = (req, res, next) => {
+module.exports.auth = (req, res, next) => {
     if (req.url.startsWith('/api')) {
         if (req.headers.authorization) {
             let token = req.headers.authorization.split(' ')[1]
