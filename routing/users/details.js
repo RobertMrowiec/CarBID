@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt')
 const User = require('../../models/User')
 const { defaultResponse } = require('../common')
 const { userValidate } = require('../../validation/user')
@@ -13,6 +14,8 @@ exports.pagination = defaultResponse(req => {
 
 exports.add = defaultResponse(async req => {
     const result = await userValidate(req.body)
+    req.body.password = bcrypt.hashSync(req.body.password, 5)
+    
     return !result.length ? new User(req.body).save() : result
 })
 
