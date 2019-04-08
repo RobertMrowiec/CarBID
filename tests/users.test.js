@@ -110,7 +110,7 @@ describe('POST Users', () => {
             body: JSON.stringify({
                 email: 'test@herecars.com',
                 name: 'hellothere',
-                password: 'hello123'
+                password: 'qwe123'
             })
         })
         .then(result => result.json())

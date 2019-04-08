@@ -2,7 +2,7 @@ const Car = require('../../models/Car')
 const { defaultResponse } = require('../common')
 const { carValidate } = require('../../validation/car')
 
-exports.get = defaultResponse(() => Car.find())
+exports.get = defaultResponse(() => Car.find().limit(3))
 
 exports.getById = defaultResponse(req => Car.findById(req.params.id))
 

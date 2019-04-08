@@ -1,8 +1,9 @@
 const Auction = require('../../models/Auction')
 const { defaultResponse } = require('../common')
 const { auctionValidate } = require('../../validation/auction')
+const { auctionSerialize } = require('../common')
 
-exports.get = defaultResponse(() => Auction.find().populate('car').populate('offer'))
+exports.get = defaultResponse(() => Auction.find().populate('car').populate('offer').then(data => auctionSerialize(data)))
 
 exports.getById = defaultResponse(req => Auction.findById(req.params.id).populate('car').populate('offer'))
 

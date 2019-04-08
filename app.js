@@ -12,7 +12,7 @@ app.use(cors('*'))
 app.use(bodyParser.json())
 
 app.use((req, res, next) => auth(req, res, next))
-  
+
 app.use('/api/users', require('./routing/users/route'))
 app.use('/api/cars', require('./routing/cars/route'))
 app.use('/api/auctions', require('./routing/auctions/route'))

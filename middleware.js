@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken')
 
 module.exports.auth = (req, res, next) => {
-    if (req.url.startsWith('/api')) {
+    if (req.url.startsWith('/api' && (req.url !== '/api/users' && req.method === 'POST'))) {
         if (req.headers.authorization) {
             let token = req.headers.authorization.split(' ')[1]
             jwt.verify(token, process.env.privateKey, (err, decoded) => {

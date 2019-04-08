@@ -5,11 +5,11 @@ const User = require('../../models/User')
 
 exports.login = defaultResponse(async req => {
     const user = await User.findOne({email: req.body.email})
-    if (bcrypt.compare(req.body.password, user.password)) {
+    if (user && bcrypt.compare(req.body.password, user.password)) {
         return {
-            token: jwt.sign({user}, process.env.privateKey, { expiresIn: 60 * 60 }),
+            token: jwt.sign({ user }, process.env.privateKey, { expiresIn: 60 * 60 }),
             user
         }
     }
-    return 'Wrong credentials'
+    throw 'Wrong credentials'
 })
