@@ -7,7 +7,7 @@ exports.get = defaultResponse(() => User.find().populate('auctions').populate('c
 
 exports.getById = defaultResponse(req => User.findById(req.params.id))
 
-exports.pagination = defaultResponse(req => {
+exports.pagination = defaultResponse(async req => {
     const limit = Number(req.params.limit)
     return User.find().skip(limit * (req.params.page - 1)).limit(limit)
 })

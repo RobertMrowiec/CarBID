@@ -13,3 +13,5 @@ function auctionSerialize(data) {
     }).serialize(data)
 }
 module.exports.auctionSerialize = auctionSerialize
+
+module.exports.url = (req) => `${req.protocol}://${req.get('host')}`
