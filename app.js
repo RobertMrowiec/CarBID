@@ -3,7 +3,7 @@ const cors = require('cors')
 const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
-const { auth } = require('./middleware')
+const { auth } = require('./middlewares')
 const app = express()
 
 dotenv.config()

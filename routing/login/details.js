@@ -11,5 +11,5 @@ exports.login = defaultResponse(async req => {
             user
         }
     }
-    throw 'Wrong credentials'
+    throw new Error('Wrong credentials')
 })
