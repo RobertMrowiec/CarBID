@@ -1,9 +1,10 @@
 const JSONAPISerializer = require('jsonapi-serializer').Serializer;
 
-function auctionSerialize(data, topLevelLinks) {
+function auctionSerialize(data, topLevelLinks, meta) {
   return new JSONAPISerializer('auctions', {
       attributes: ['name', 'description', 'image', 'car', 'createdAt', 'endDate', 'updatedAt', 'minimalPrice', 'offers'],
-      topLevelLinks
+      topLevelLinks,
+      meta
   }).serialize(data)
 }
 

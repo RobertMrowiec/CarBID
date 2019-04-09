@@ -20,11 +20,11 @@ beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser
 
 describe('GET auctions', () => {
     test('get array of auctions', () => {
-        return fetch(`${url}/auctions`, { headers: { 'Authorization': `Bearer ${token}`}})
+        return fetch(`${url}/auctions?page[number]=1&page[size]=2`, { headers: { 'Authorization': `Bearer ${token}`}})
         .then(result => result.json()).then(auctions => {
             expect(200)
-            expect(Array.isArray(auctions)).toBeTruthy()
-            auctionId = auctions[0]._id
+            expect(Array.isArray(auctions.data)).toBeTruthy()
+            auctionId = auctions.data[0].id
         })
     })
 })
