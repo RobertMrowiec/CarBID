@@ -76,7 +76,7 @@ describe('POST Users', () => {
         .then(result => {
             expect(400)
             expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"email" with value "test@herrecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
+            expect(result).toEqual(['"email" with value \"test@herrecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
         })
     })
     test('throw error if name is not presented', () => {
@@ -110,7 +110,7 @@ describe('POST Users', () => {
             body: JSON.stringify({
                 email: 'test@herecars.com',
                 name: 'hellothere',
-                password: 'hello123'
+                password: 'qwe123'
             })
         })
         .then(result => result.json())
@@ -189,7 +189,7 @@ describe('Update User by ID', () => {
         .then(result => {
             expect(400)
             expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"email" with value "test@hecars.com" fails to match the required pattern: /([a-z][a-zA-Z0-9.-])\\w+[@]+(herecars.com)/'])
+            expect(result).toEqual(['"email" with value \"test@hecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
         })
     })
 
