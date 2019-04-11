@@ -31,7 +31,7 @@ describe('GET Car by ID', () => {
         .then(result => result.json())
         .then(car => {
             expect(200)
-            expect(car._id).toEqual(carId)
+            expect(car.data.id).toEqual(carId)
         })
     })
 })

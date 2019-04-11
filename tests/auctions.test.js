@@ -10,10 +10,11 @@ let token
 let auctionId
 
 beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-	.then(() => Auction.deleteMany({}))
 	.then(async () => token = await generateToken())
+	.then(() => Auction.deleteMany({}))
 	.then(async () => {
-		const tempCar = await Car.findOne()
+		const tempCar = await Car.create({ brand: 'Ford', model: 'Mustard', maxTorque: 200 })
+		// const tempCar = await Car.findOne({brand: 'Ford'})
 		carId = tempCar._id
 		
 		return seedAuctions(tempCar)
