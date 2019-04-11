@@ -13,10 +13,8 @@ beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser
 	.then(async () => token = await generateToken())
 	.then(() => Auction.deleteMany({}))
 	.then(async () => {
-		await Car.create({ brand: 'Ford', model: 'Mustard', maxTorque: 200 }).then(x => {
-			console.log(x);
-		})
-		const tempCar = await Car.findOne({brand: 'Ford'})
+		const tempCar = await Car.create({ brand: 'Ford', model: 'Mustard', maxTorque: 200 })
+		// const tempCar = await Car.findOne({brand: 'Ford'})
 		carId = tempCar._id
 		
 		return seedAuctions(tempCar)

@@ -3,7 +3,7 @@ const { defaultResponse } = require('../common')
 const { carValidate } = require('../../validation/car')
 const { carSerialize } = require('../../serializers/cars')
 
-exports.get = defaultResponse(() => Car.find().limit(3).then(cars => carSerialize(cars)))
+exports.get = defaultResponse(() => Car.find().limit(3))
 
 exports.getById = defaultResponse(req => Car.findById(req.params.id).then(car => carSerialize(car)))
 
