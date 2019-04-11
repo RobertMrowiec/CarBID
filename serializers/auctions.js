@@ -4,7 +4,11 @@ function auctionSerialize(data, topLevelLinks, meta) {
   return new JSONAPISerializer('auctions', {
       attributes: ['name', 'description', 'image', 'car', 'createdAt', 'endDate', 'updatedAt', 'minimalPrice', 'offers'],
       topLevelLinks,
-      meta
+      meta,
+      car: {
+        ref: '_id',
+        nullIdMissing: true
+      }
   }).serialize(data)
 }
 
