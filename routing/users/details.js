@@ -20,7 +20,11 @@ exports.add = defaultResponse(async req => {
 })
 
 exports.update = defaultResponse(async req => {
+    const user = await User.findById(req.params.id)
     const result = await userValidate(req.body)
+    if (req.body.password && !bcrypt.compare(req.body.password, user.password)){
+        req.body.password = bcrypt.hashSync(req.body.password, 5)
+    }
     return !result.length ? User.findByIdAndUpdate(req.params.id, req.body, {new: true}) : result
 })
 

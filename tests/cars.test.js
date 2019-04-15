@@ -8,7 +8,7 @@ let token
 let carId
 
 beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-    .then(() => Car.deleteMany({}))
+    // .then(() => Car.deleteMany({}))
     .then(async () => token = await generateToken())
     .then(() => seedCars()))
 
