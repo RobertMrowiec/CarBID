@@ -2,7 +2,7 @@ const Auction = require('../../models/Auction')
 const { defaultResponse, url } = require('../common')
 const { auctionValidate } = require('../../validation/auction')
 const { auctionSerialize } = require('../../serializers/auctions')
-
+const mongoose = require('mongoose')
 exports.get = defaultResponse(() => Auction.find().populate('car').populate('offer').then(data => auctionSerialize(data)))
 
 exports.getById = defaultResponse(req => Auction.findById(req.params.id).populate('car').populate('offer'))
@@ -23,8 +23,15 @@ exports.pagination = defaultResponse(async req => {
 })
 
 exports.add = defaultResponse(async req => {
-	const result = await auctionValidate(req.body)
-	return !result.length ? new Auction(req.body).save() : result
+
+	const body = req.body
+
+	if (req.file) {
+		body.image = `http://localhost:8007/${req.file.path}`
+	}
+
+	const result = await auctionValidate(body)
+	return !result.length ? new Auction(body).save() : result
 })
 
 exports.update = defaultResponse(async req => {

@@ -3,6 +3,7 @@ const { seedAuctions } = require('../seeds/seed')
 const { generateToken } = require('./token')
 const Auction = require('../models/Auction')
 const Car = require('../models/Car')
+const FormData = require('form-data');
 const mongoose = require('mongoose')
 const url = 'http://localhost:8007/api'
 let carId
@@ -43,21 +44,21 @@ describe('GET auction by ID', () => {
 })
 
 describe('ADD auctions', () => {
-	test('add auctiion if body passes the validation', () => {
+	test('add auction if body passes the validation', () => {
+		
+		let form = new FormData()
+		form.append('name', 'test')
+		form.append('description', 'test description')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', 100)
+		form.append('image', 'test.png')
+	
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				description: 'hello',
-				image: 'asd.jpg',
-				car: carId,
-				minimalPrice: 10
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(auction => {
@@ -66,19 +67,20 @@ describe('ADD auctions', () => {
 			expect(auction.name).toEqual('test')
 		})
 	})
+
 	test('throw error if name is not defined', () => {
+		let form = new FormData()
+		form.append('description', 'test description')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', 100)
+		form.append('image', 'test.png')
+
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				description: 'test',
-				image: 'test.png',
-				car: carId
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
@@ -86,19 +88,20 @@ describe('ADD auctions', () => {
 			expect(result).toEqual(["\"name\" is required"])
 		})
 	})
+
 	test('throw error if description is not defined', () => {
+		let form = new FormData()
+		form.append('name', 'test')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', 100)
+		form.append('image', 'test.png')
+
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				image: 'test.png',
-				car: carId
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
@@ -106,20 +109,21 @@ describe('ADD auctions', () => {
 			expect(result).toEqual(["\"description\" is required"])
 		})
 	})
+
 	test('throw error if description length is more than 200 chars', () => {
+		let form = new FormData()
+		form.append('name', 'qwe')
+		form.append('description', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu ultricies justo. Mauris sollicitudin, nisl sit amet ornare vestibulum, nisl leo ultricies felis, eget hendrerit orci mi non dolor. Quisque')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', 100)
+		form.append('image', 'test.png')
+
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				image: 'test.png',
-				description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu ultricies justo. Mauris sollicitudin, nisl sit amet ornare vestibulum, nisl leo ultricies felis, eget hendrerit orci mi non dolor. Quisque',
-				car: carId
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
@@ -127,19 +131,20 @@ describe('ADD auctions', () => {
 			expect(result).toEqual(['\"description\" length must be less than or equal to 200 characters long'])
 		})
 	})
+
 	test('throw error if image is not defined', () => {
+		let form = new FormData()
+		form.append('name', 'name')
+		form.append('description', 'test description')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', 100)
+
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				description: 'test',
-				car: carId
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
@@ -148,18 +153,18 @@ describe('ADD auctions', () => {
 		})
 	})
 	test('throw error if car is not defined', () => {
+		let form = new FormData()
+		form.append('name', 'test')
+		form.append('description', 'test description')
+		form.append('minimalPrice', 100)
+		form.append('image', 'test.png')
+	
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				image: 'test.png',
-				description: 'test'
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
@@ -168,20 +173,19 @@ describe('ADD auctions', () => {
 		})
 	})
 	test('throw error if minimalPrice is negative', () => {
+		let form = new FormData()
+		form.append('name', 'test')
+		form.append('description', 'test description')
+		form.append('car', carId.toString())
+		form.append('minimalPrice', -100)
+		form.append('image', 'test.png')
+	
 		return fetch(`${url}/auctions`, {
 			method: 'POST',
 			headers: {
-				'Content-Type': 'application/json',
-				'Accept': 'application/json',
 				'Authorization': `Bearer ${token}`
 			},
-			body: JSON.stringify({
-				name: 'test',
-				image: 'test.png',
-				description: 'test',
-				car: carId,
-				minimalPrice: -10
-			})
+			body: form
 		})
 		.then(result => result.json())
 		.then(result => {
