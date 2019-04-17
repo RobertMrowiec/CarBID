@@ -17,6 +17,7 @@ app.use('/api/users', require('./routing/users/route'))
 app.use('/api/cars', require('./routing/cars/route'))
 app.use('/api/auctions', require('./routing/auctions/route'))
 app.use('/api/offers', require('./routing/offers/route'))
+app.use('/api/images', require('./routing/images/route'))
 app.use('/login', require('./routing/login/route'))
 
 return mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true }).then(() => {

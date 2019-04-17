@@ -27,7 +27,7 @@ exports.add = defaultResponse(async req => {
 	const body = req.body
 
 	if (req.file) {
-		body.image = `http://localhost:8007/${req.file.path}`
+		body.image = `http://localhost:8008/${req.file.path}`
 	}
 
 	const result = await auctionValidate(body)
