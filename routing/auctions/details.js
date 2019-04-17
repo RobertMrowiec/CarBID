@@ -19,7 +19,7 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
-	return auctionSerialize(await Auction.find().skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
+	return auctionSerialize(await Auction.find().sort('-endDate').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
 
 exports.add = defaultResponse(async req => {
