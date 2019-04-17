@@ -54,8 +54,7 @@ describe('POST Users', () => {
         .then(result => result.json())
         .then(result => {
             expect(400)
-            expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"password" length must be at least 6 characters long'])
+            expect(result.message).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
     test('throw error if email is invalid', () => {
@@ -75,8 +74,7 @@ describe('POST Users', () => {
         .then(result => result.json())
         .then(result => {
             expect(400)
-            expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"email" with value \"test@herrecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
+            expect(result.message).toEqual(['"email" with value \"test@herrecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
         })
     })
     test('throw error if name is not presented', () => {
@@ -95,8 +93,7 @@ describe('POST Users', () => {
         .then(result => result.json())
         .then(result => {
             expect(400)
-            expect(result.errors).toBeDefined()
-            expect(result.errors.name.message).toEqual('Path `name` is required.')
+            expect(result.message).toEqual(["\"name\" is required"])
         })
     })
     test('should add user to db if body data passes a validation', () => {
@@ -188,8 +185,7 @@ describe('Update User by ID', () => {
         .then(result => result.json())
         .then(result => {
             expect(400)
-            expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"email" with value \"test@hecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
+            expect(result.message).toEqual(['"email" with value \"test@hecars.com\" fails to match the required pattern: /([a-zA-Z0-9.-])\\w+[@]+(herecars.com)$/'])
         })
     })
 
@@ -210,8 +206,7 @@ describe('Update User by ID', () => {
         .then(result => result.json())
         .then(result => {
             expect(400)
-            expect(Array.isArray(result)).toEqual(true)
-            expect(result).toEqual(['"password" length must be at least 6 characters long'])
+            expect(result.message).toEqual(['"password" length must be at least 6 characters long'])
         })
     })
 })
