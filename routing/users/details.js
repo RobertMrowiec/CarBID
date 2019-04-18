@@ -2,10 +2,11 @@ const bcrypt = require('bcrypt')
 const User = require('../../models/User')
 const { defaultResponse } = require('../common')
 const { userValidate } = require('../../validation/user')
+const { userSerialize } = require('../../serializers/users')
 
 exports.get = defaultResponse(() => User.find().populate('auctions').populate('car'))
 
-exports.getById = defaultResponse(req => User.findById(req.params.id))
+exports.getById = defaultResponse(async req => userSerialize(await User.findById(req.params.id)))
 
 exports.pagination = defaultResponse(req => {
     const limit = Number(req.params.limit)
@@ -15,11 +16,12 @@ exports.pagination = defaultResponse(req => {
 exports.add = defaultResponse(async req => {
     const result = await userValidate(req.body)
     req.body.password = bcrypt.hashSync(req.body.password, 5)
-    
+
     return !result.length ? new User(req.body).save() : result
 })
 
 exports.update = defaultResponse(async req => {
+    req.body = req.body.data.attributes
     const user = await User.findById(req.params.id)
     const result = await userValidate(req.body)
     if (req.body.password && !bcrypt.compare(req.body.password, user.password)){

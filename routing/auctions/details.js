@@ -5,7 +5,7 @@ const { auctionSerialize } = require('../../serializers/auctions')
 const mongoose = require('mongoose')
 exports.get = defaultResponse(() => Auction.find().populate('car').populate('offer').then(data => auctionSerialize(data)))
 
-exports.getById = defaultResponse(req => Auction.findById(req.params.id).populate('car').populate('offer'))
+exports.getById = defaultResponse(async req => auctionSerialize( await Auction.findById(req.params.id).populate('car').populate('offer')))
 
 exports.pagination = defaultResponse(async req => {
 	const number = +req.query.page.number
