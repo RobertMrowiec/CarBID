@@ -23,8 +23,7 @@ exports.pagination = defaultResponse(async req => {
 })
 
 exports.add = defaultResponse(async req => {
-
-	const body = req.body
+	const body = req.body.data.attributes
 
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`

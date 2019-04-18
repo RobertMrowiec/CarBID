@@ -13,6 +13,11 @@ exports.pagination = defaultResponse(req => {
 })
 
 exports.add = defaultResponse(async req => {
+    req.body = req.body.data.attributes
+    req.body.horsePower = +req.body['horse-power']
+    req.body.maxTorque = +req.body['max-torque']
+    console.log(req.body);
+    
     const result = await carValidate(req.body)
     return !result.length ? new Car(req.body).save() : result
 })
