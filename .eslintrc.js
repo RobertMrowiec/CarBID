@@ -6,9 +6,11 @@ module.exports = {
 	},
 	extends: ['eslint:recommended'],
 	env: {
+		jest: true,
 		node: true
 	},
 	rules: {
+		"no-console": "off",
 		'semi': ['error', 'never'],
 		'indent': ['error', 'tab']
 	}
