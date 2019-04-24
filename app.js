@@ -20,6 +20,9 @@ app.use('/api/offers', require('./routing/offers/route'))
 app.use('/api/images', require('./routing/images/route'))
 app.use('/login', require('./routing/login/route'))
 
-return mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true }).then(() => {
-    return app.listen(8007, () => console.log('Server is running on port: 8007'))
-})
+module.exports = () => {
+  return mongoose.connect(
+    process.env.MONGODB_URI || 'mongodb://localhost/carbid',
+    { useNewUrlParser: true }
+  ).then(() => app)
+};
