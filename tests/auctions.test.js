@@ -11,6 +11,7 @@ const app = require('../app')
 let carId
 let token
 let auctionId
+let form = new FormData()
 
 beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
 	.then(async () => token = await generateToken())
@@ -46,7 +47,6 @@ describe('GET auction by ID', () => {
 
 describe('ADD auctions', () => {
 	test('add auction if body passes the validation', () => {
-		let form = new FormData()
 		form.append('name', 'test')
 		form.append('description', 'test description')
 		form.append('car', carId.toString())
@@ -67,7 +67,6 @@ describe('ADD auctions', () => {
 	})
 
 	test('throw error if name is not defined', () => {
-		let form = new FormData()
 		form.append('description', 'test description')
 		form.append('car', carId.toString())
 		form.append('minimalPrice', 100)
@@ -86,7 +85,6 @@ describe('ADD auctions', () => {
 	})
 
 	test('throw error if description is not defined', () => {
-		let form = new FormData()
 		form.append('name', 'test')
 		form.append('car', carId.toString())
 		form.append('minimalPrice', 100)
@@ -105,7 +103,6 @@ describe('ADD auctions', () => {
 	})
 
 	test('throw error if description length is more than 200 chars', () => {
-		let form = new FormData()
 		form.append('name', 'qwe')
 		form.append('description', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eu ultricies justo. Mauris sollicitudin, nisl sit amet ornare vestibulum, nisl leo ultricies felis, eget hendrerit orci mi non dolor. Quisque')
 		form.append('car', carId.toString())
@@ -125,7 +122,6 @@ describe('ADD auctions', () => {
 	})
 
 	test('throw error if image is not defined', () => {
-		let form = new FormData()
 		form.append('name', 'name')
 		form.append('description', 'test description')
 		form.append('car', carId.toString())
@@ -143,7 +139,6 @@ describe('ADD auctions', () => {
 			})
 	})
 	test('throw error if car is not defined', () => {
-		let form = new FormData()
 		form.append('name', 'test')
 		form.append('description', 'test description')
 		form.append('minimalPrice', 100)
@@ -161,7 +156,6 @@ describe('ADD auctions', () => {
 			})
 	})
 	test('throw error if minimalPrice is negative', () => {
-		let form = new FormData()
 		form.append('name', 'test')
 		form.append('description', 'test description')
 		form.append('car', carId.toString())
