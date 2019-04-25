@@ -81,7 +81,7 @@ describe('ADD auctions', () => {
 			.send(form)
 			.then(result => {
 				expect(400)
-				expect(result).toEqual(["\"name\" is required"])
+				expect(result).toEqual(["'name' is required"])
 			})
 	})
 
@@ -100,7 +100,7 @@ describe('ADD auctions', () => {
 			.send(form)
 			.then(result => {
 				expect(400)
-				expect(result).toEqual(["\"description\" is required"])
+				expect(result).toEqual(["'description' is required"])
 			})
 	})
 
@@ -139,7 +139,7 @@ describe('ADD auctions', () => {
 			.send(form)
 			.then(result => {
 				expect(400)
-				expect(result).toEqual(["\"image\" is required"])
+				expect(result).toEqual(["'image' is required"])
 			})
 	})
 	test('throw error if car is not defined', () => {
@@ -233,7 +233,7 @@ describe('Update auction', () => {
 			})
 			.then(result => {
 				expect(400)
-				expect(result).toEqual(["\"minimalPrice\" must be larger than or equal to 0"])
+				expect(result).toEqual(["'minimalPrice' must be larger than or equal to 0"])
 			})
 	})
 })
