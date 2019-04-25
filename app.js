@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const express = require('express')
-const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 const { auth } = require('./middlewares')
 const app = express()
@@ -20,9 +19,4 @@ app.use('/api/offers', require('./routing/offers/route'))
 app.use('/api/images', require('./routing/images/route'))
 app.use('/login', require('./routing/login/route'))
 
-module.exports = () => {
-	return mongoose.connect(
-		process.env.MONGODB_URI || 'mongodb://localhost/carbid',
-		{ useNewUrlParser: true }
-	).then(() => app)
-}
+module.exports = app
