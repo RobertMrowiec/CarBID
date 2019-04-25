@@ -8,7 +8,12 @@ function auctionSerialize(data, topLevelLinks, meta) {
 		car: {
 			ref: '_id',
 			nullIdMissing: true
+		},
+		user: {
+			ref: '_id',
+			nullIdMissing: true
 		}
+
 	}).serialize(data)
 }
 

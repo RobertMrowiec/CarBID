@@ -22,7 +22,8 @@ exports.pagination = defaultResponse(async req => {
 })
 
 exports.add = defaultResponse(async req => {
-	const body = { ...req.body.data.attributes, car: req.body.data.relationships.car.data.id }
+	const { data } = req.body
+	const body = { ...data.attributes, car: data.relationships.car.data.id, user: data.relationships.car.data.id  }
 
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
