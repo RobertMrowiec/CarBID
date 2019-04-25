@@ -20,9 +20,9 @@ app.use('/api/offers', require('./routing/offers/route'))
 app.use('/api/images', require('./routing/images/route'))
 app.use('/login', require('./routing/login/route'))
 
-module.exports = (mongodbURL) => {
+module.exports = () => {
 	return mongoose.connect(
-		process.env.MONGODB_URI || mongodbURL,
+		process.env.MONGODB_URI || 'mongodb://localhost/carbid',
 		{ useNewUrlParser: true }
 	).then(() => app)
 }

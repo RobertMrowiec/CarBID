@@ -1,14 +1,14 @@
 const request = require('supertest')
 const { seedCars } = require('../seeds/seed')
 const { generateToken } = require('./token')
-// const Car = require('../models/Car')
+const Car = require('../models/Car')
 const mongoose = require('mongoose')
 const app = require('../app')
 let token
 let carId
 
 beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser: true })
-// .then(() => Car.deleteMany({}))
+	.then(() => Car.deleteMany({}))
 	.then(async () => token = await generateToken())
 	.then(() => seedCars()))
 
