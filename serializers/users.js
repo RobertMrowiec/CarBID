@@ -1,20 +1,20 @@
-const JSONAPISerializer = require('jsonapi-serializer').Serializer;
+const JSONAPISerializer = require('jsonapi-serializer').Serializer
 
 function userSerialize(data, topLevelLinks, meta) {
-  return new JSONAPISerializer('user', {
-      attributes: ['email', 'password', 'name'],
-      topLevelLinks,
-      meta,
-      auctions: [{
-        ref: '_id',
-        nullIdMissing: true
-      }],
-      offers: [{
-        ref: '_id',
-        nullIdMissing: true
-      }],
+	return new JSONAPISerializer('user', {
+		attributes: ['email', 'password', 'name'],
+		topLevelLinks,
+		meta,
+		auctions: [{
+			ref: '_id',
+			nullIdMissing: true
+		}],
+		offers: [{
+			ref: '_id',
+			nullIdMissing: true
+		}],
 
-  }).serialize(data)
+	}).serialize(data)
 }
 
 module.exports.userSerialize = userSerialize

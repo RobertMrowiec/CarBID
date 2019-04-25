@@ -46,7 +46,6 @@ describe('GET auction by ID', () => {
 
 describe('ADD auctions', () => {
 	test('add auction if body passes the validation', () => {
-		
 		let form = new FormData()
 		form.append('name', 'test')
 		form.append('description', 'test description')

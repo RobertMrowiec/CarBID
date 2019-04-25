@@ -16,9 +16,9 @@ exports.add = defaultResponse(async req => {
 	req.body = req.body.data.attributes
 	req.body.horsePower = +req.body['horse-power']
 	req.body.maxTorque = +req.body['max-torque']
-		
+
 	const result = await carValidate(req.body)
-	return !result.length ? new Car(req.body).save() : result
+	return !result.length ? new Car(req.body).save().then(data => carSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
