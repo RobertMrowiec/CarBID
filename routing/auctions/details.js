@@ -32,7 +32,7 @@ exports.add = defaultResponse(async req => {
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
 	}
-	
+
 	const result = await auctionValidate(body)
 	return !result.length ? new Auction(body).save().then(data => auctionSerialize(data)) : result
 })
