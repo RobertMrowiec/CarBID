@@ -18,17 +18,21 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
-	return auctionSerialize(await Auction.find().sort('-endDate').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
+	return auctionSerialize(await Auction.find().sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
+
+exports.byUser = defaultResponse(async req => auctionSerialize( await Auction.find({ user: req.params.userId}).exec()))
 
 exports.add = defaultResponse(async req => {
 	const { data } = req.body
-	const body = { ...data.attributes, car: data.relationships.car.data.id, user: data.relationships.car.data.id  }
+	const { relationships } = data
+
+	const body = { ...data.attributes, car: relationships.car.data.id, user: relationships.user.data.id }
 
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
 	}
-
+	
 	const result = await auctionValidate(body)
 	return !result.length ? new Auction(body).save().then(data => auctionSerialize(data)) : result
 })

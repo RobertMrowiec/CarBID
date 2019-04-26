@@ -6,7 +6,8 @@ const auctionValidate = (body) => {
 		minimalPrice: Joi.number().min(0),
 		name: Joi.string().required(),
 		car: Joi.string().required(),
-		image: Joi.string().required()
+		image: Joi.string().required(),
+		user: Joi.string().required()
 	}).unknown()
 
 	return Joi.validate(body, AuctionSchema)
