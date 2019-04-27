@@ -1,5 +1,6 @@
 const request = require('supertest')
 const Car = require('../models/Car')
+const User = require('../models/User')
 const mongoose = require('mongoose')
 const FormData = require('form-data')
 const Auction = require('../models/Auction')
@@ -24,8 +25,9 @@ beforeAll(() => mongoose.connect('mongodb://localhost/carbid', { useNewUrlParser
 	.then(async () => {
 		const tempCar = await Car.create({ brand: 'Ford', model: 'Mustard', maxTorque: 200 })
 		carId = tempCar._id
+		const tempUser = await User.create({ name: 'seed', surname: 'seedSurname', password: 'seed123', email: 'seed@herecars.com'})
 		
-		await seedAuctions(tempCar)
+		await seedAuctions(tempCar, tempUser)
 	})
 )
 

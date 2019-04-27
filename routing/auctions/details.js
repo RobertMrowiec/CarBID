@@ -7,6 +7,7 @@ exports.get = defaultResponse(() => Auction.find().populate('car').populate('off
 exports.getById = defaultResponse(async req => auctionSerialize( await Auction.findById(req.params.id).populate('car').populate('offer')))
 
 exports.pagination = defaultResponse(async req => {
+	const match = req.query.user ? { user: req.query.user } : {}
 	const number = +req.query.page.number
 	const size = +req.query.page.size
 	const totalPages = Math.ceil(await Auction.countDocuments() / size)
@@ -18,16 +19,15 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
-	return auctionSerialize(await Auction.find().sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
+	
+	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
-
-exports.byUser = defaultResponse(async req => auctionSerialize( await Auction.find({ user: req.params.userId}).exec()))
 
 exports.add = defaultResponse(async req => {
 	const { data } = req.body
-	const { relationships } = data
+	const { relationships: { car, user} } = data
 
-	const body = { ...data.attributes, car: relationships.car.data.id, user: relationships.user.data.id }
+	const body = { ...data.attributes, car: car.data.id, user: user.data.id }
 
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
