@@ -10,7 +10,9 @@ exports.pagination = defaultResponse(async req => {
 	const match = req.query.user ? { user: req.query.user } : {}
 	const number = +req.query.page.number
 	const size = +req.query.page.size
-	const totalPages = Math.ceil(await Auction.countDocuments() / size)
+
+	const totalPages = Math.ceil(await (req.query.user ? Auction.countDocuments(match) : Auction.countDocuments())/ size)
+
 	const links = {
 		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
 		first: `${url(req)}/api/auctions?page[number]=1&page[size]=${size}`,
@@ -19,6 +21,9 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
+	if (req.query.user) for (x of Object.keys(links)) {
+		if (links[x]) links[x] += `&user=${req.query.user}`
+	}
 	
 	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
