@@ -7,12 +7,12 @@ exports.get = defaultResponse(() => Auction.find().populate('car').populate('off
 exports.getById = defaultResponse(async req => auctionSerialize( await Auction.findById(req.params.id).populate('car').populate('offer')))
 
 exports.pagination = defaultResponse(async req => {
-	const { user, page } = req.query
-	const match = user ? { user: user } : {}
+	const { userId, page } = req.query
+	const match = userId ? { user: userId } : {}
 	const number = +page.number
 	const size = +page.size
 
-	const totalPages = Math.ceil(await (user ? Auction.countDocuments(match) : Auction.countDocuments())/ size)
+	const totalPages = Math.ceil(await (userId ? Auction.countDocuments(match) : Auction.countDocuments()) / size)
 
 	const links = {
 		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
@@ -22,21 +22,12 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
-	if (user) for (key of Object.keys(links)) {
-		if (links[key]) links[key] += `&user=${user}`
+	if (userId) for (key of Object.keys(links)) {
+		if (links[key]) links[key] += `&user=${userId}`
 	}
 	
 	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
-
-function setBody(req) {
-	const { data } = req.body
-	const { relationships: { car, user} } = data
-	
-	data.attributes.endDate = data.attributes['end-date']
-	
-	return { ...data.attributes, car: car.data.id, user: user.data.id }
-}	
 
 exports.add = defaultResponse(async req => {
 	const body = setBody(req)
@@ -61,3 +52,12 @@ exports.update = defaultResponse(async req => {
 })
 
 exports.delete = defaultResponse(req => Auction.findByIdAndDelete(req.params.id))
+
+function setBody(req) {
+	const { data } = req.body
+	const { relationships: { car, user} } = data
+	
+	data.attributes.endDate = data.attributes['end-date']
+	
+	return { ...data.attributes, car: car.data.id, user: user.data.id }
+}	

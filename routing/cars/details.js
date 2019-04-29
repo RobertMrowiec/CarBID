@@ -12,13 +12,6 @@ exports.pagination = defaultResponse(req => {
 	return Car.find().skip(limit * (req.params.page - 1)).limit(limit)
 })
 
-function setBody(req) {
-	req.body = req.body.data.attributes
-	req.body.horsePower = +req.body['horse-power']
-	req.body.maxTorque = +req.body['max-torque']
-	req.body.assembledAt = new Date(req.body['assembled-at']).toISOString().substr(0,10)
-}
-
 exports.add = defaultResponse(async req => {
 	setBody(req)
 	const result = await carValidate(req.body)
@@ -33,3 +26,10 @@ exports.update = defaultResponse(async req => {
 })
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))
+
+function setBody(req) {
+	req.body = req.body.data.attributes
+	req.body.horsePower = +req.body['horse-power']
+	req.body.maxTorque = +req.body['max-torque']
+	req.body.assembledAt = new Date(req.body['assembled-at']).toISOString().substr(0,10)
+}
