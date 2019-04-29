@@ -7,11 +7,12 @@ exports.get = defaultResponse(() => Auction.find().populate('car').populate('off
 exports.getById = defaultResponse(async req => auctionSerialize( await Auction.findById(req.params.id).populate('car').populate('offer')))
 
 exports.pagination = defaultResponse(async req => {
-	const match = req.query.user ? { user: req.query.user } : {}
-	const number = +req.query.page.number
-	const size = +req.query.page.size
+	const { user, page } = req.query
+	const match = user ? { user: user } : {}
+	const number = +page.number
+	const size = +page.size
 
-	const totalPages = Math.ceil(await (req.query.user ? Auction.countDocuments(match) : Auction.countDocuments())/ size)
+	const totalPages = Math.ceil(await (user ? Auction.countDocuments(match) : Auction.countDocuments())/ size)
 
 	const links = {
 		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
@@ -21,19 +22,25 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
 	}
 
-	if (req.query.user) for (x of Object.keys(links)) {
-		if (links[x]) links[x] += `&user=${req.query.user}`
+	if (user) for (key of Object.keys(links)) {
+		if (links[key]) links[key] += `&user=${user}`
 	}
 	
 	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
 
-exports.add = defaultResponse(async req => {
+function setBody(req) {
 	const { data } = req.body
 	const { relationships: { car, user} } = data
+	
+	data.attributes.endDate = data.attributes['end-date']
+	
+	return { ...data.attributes, car: car.data.id, user: user.data.id }
+}	
 
-	const body = { ...data.attributes, car: car.data.id, user: user.data.id }
-
+exports.add = defaultResponse(async req => {
+	const body = setBody(req)
+	
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
 	}
@@ -43,8 +50,14 @@ exports.add = defaultResponse(async req => {
 })
 
 exports.update = defaultResponse(async req => {
-	const result = await auctionValidate(req.body)
-	return !result.length ? Auction.findByIdAndUpdate(req.params.id, req.body, {new: true}) : result
+	const body = setBody(req)
+
+	if (req.file) {
+		body.image = `http://localhost:8008/${req.file.path}`
+	}
+
+	const result = await auctionValidate(body)
+	return !result.length ? Auction.findByIdAndUpdate(req.params.id, body, {new: true}).then(data => auctionSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Auction.findByIdAndDelete(req.params.id))

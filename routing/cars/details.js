@@ -12,18 +12,24 @@ exports.pagination = defaultResponse(req => {
 	return Car.find().skip(limit * (req.params.page - 1)).limit(limit)
 })
 
-exports.add = defaultResponse(async req => {
+function setBody(req) {
 	req.body = req.body.data.attributes
 	req.body.horsePower = +req.body['horse-power']
 	req.body.maxTorque = +req.body['max-torque']
+	req.body.assembledAt = new Date(req.body['assembled-at']).toISOString().substr(0,10)
+}
 
+exports.add = defaultResponse(async req => {
+	setBody(req)
 	const result = await carValidate(req.body)
 	return !result.length ? new Car(req.body).save().then(data => carSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
+	setBody(req)
+
 	const result = await carValidate(req.body)
-	return !result.length ? Car.findByIdAndUpdate(req.params.id, req.body, {new: true}) : result
+	return !result.length ? Car.findByIdAndUpdate(req.params.id, req.body, {new: true}).then(data => carSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))

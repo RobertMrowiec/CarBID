@@ -16,7 +16,7 @@ const upload = multer({ storage: storage })
 router.get('/', auctions.pagination)
 	.get('/:id', auctions.getById)
 	.post('/', upload.single('image'), auctions.add)
-	.put('/:id', auctions.update)
+	.patch('/:id', auctions.update)
 	.delete('/:id', auctions.delete)
 
 module.exports = router

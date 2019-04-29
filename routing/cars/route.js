@@ -6,7 +6,7 @@ router.get('/', cars.get)
 	.get('/:id', cars.getById)
 	.get('/page/:page/limit/:limit', cars.pagination)
 	.post('/', cars.add)
-	.put('/:id', cars.update)
+	.patch('/:id', cars.update)
 	.delete('/:id', cars.delete)
 
 module.exports = router
