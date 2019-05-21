@@ -8,8 +8,8 @@ exports.get = defaultResponse(() => Car.find().limit(3))
 exports.getById = defaultResponse(req => Car.findById(req.params.id).then(car => carSerialize(car)))
 
 exports.pagination = defaultResponse(req => {
-	const { limit } = +req.params
-	return Car.find().skip(limit * (req.params.page - 1)).limit(limit)
+	const { limit, page } = +req.params
+	return Car.find().skip(limit * (page - 1)).limit(limit)
 })
 
 exports.add = defaultResponse(async req => {
@@ -20,10 +20,10 @@ exports.add = defaultResponse(async req => {
 })
 
 exports.update = defaultResponse(async req => {
-	const { body } = req
+	const { body, params: { id } } = req
 	_setBody(body)
 	const result = await carValidate(body)
-	return !result.length ? Car.findByIdAndUpdate(req.params.id, body, {new: true}).then(data => carSerialize(data)) : result
+	return !result.length ? Car.findByIdAndUpdate(id, body, {new: true}).then(data => carSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))
