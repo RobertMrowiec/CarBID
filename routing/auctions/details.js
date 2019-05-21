@@ -11,8 +11,8 @@ exports.pagination = defaultResponse(async req => {
 	const match = userId ? { user: userId } : {}
 	const number = +page.number
 	const size = +page.size
-
-	const totalPages = Math.ceil(await (userId ? Auction.countDocuments(match) : Auction.countDocuments()) / size)
+	const collectionLength = await userId ? Auction.countDocuments(match) : Auction.countDocuments()
+	const totalPages = Math.ceil( collectionLength / size)
 
 	const links = {
 		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
