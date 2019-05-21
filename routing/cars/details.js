@@ -13,13 +13,13 @@ exports.pagination = defaultResponse(req => {
 })
 
 exports.add = defaultResponse(async req => {
-	setBody(req)
+	_setBody(req)
 	const result = await carValidate(req.body)
 	return !result.length ? new Car(req.body).save().then(data => carSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
-	setBody(req)
+	_setBody(req)
 
 	const result = await carValidate(req.body)
 	return !result.length ? Car.findByIdAndUpdate(req.params.id, req.body, {new: true}).then(data => carSerialize(data)) : result
@@ -27,7 +27,7 @@ exports.update = defaultResponse(async req => {
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))
 
-function setBody(req) {
+function _setBody(req) {
 	req.body = req.body.data.attributes
 	req.body.horsePower = +req.body['horse-power']
 	req.body.maxTorque = +req.body['max-torque']

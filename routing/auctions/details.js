@@ -55,7 +55,7 @@ exports.search = defaultResponse(async req => {
 })
 
 exports.add = defaultResponse(async req => {
-	const body = setBody(req)
+	const body = _setBody(req)
 	
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
@@ -66,7 +66,7 @@ exports.add = defaultResponse(async req => {
 })
 
 exports.update = defaultResponse(async req => {
-	const body = setBody(req)
+	const body = _setBody(req)
 
 	if (req.file) {
 		body.image = `http://localhost:8008/${req.file.path}`
@@ -78,7 +78,7 @@ exports.update = defaultResponse(async req => {
 
 exports.delete = defaultResponse(req => Auction.findByIdAndDelete(req.params.id))
 
-function setBody(req) {
+function _setBody(req) {
 	const { data } = req.body
 	const { relationships: { car, user} } = data
 	
