@@ -7,11 +7,6 @@ exports.get = defaultResponse(() => Car.find().limit(3))
 
 exports.getById = defaultResponse(req => Car.findById(req.params.id).then(car => carSerialize(car)))
 
-exports.pagination = defaultResponse(req => {
-	const { limit, page } = +req.params
-	return Car.find().skip(limit * (page - 1)).limit(limit)
-})
-
 exports.add = defaultResponse(async req => {
 	let { body } = req
 	const { result, parsedBody } = await _setBody(body)

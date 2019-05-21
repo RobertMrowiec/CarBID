@@ -4,7 +4,6 @@ const cars = require('./details')
 
 router.get('/', cars.get)
 	.get('/:id', cars.getById)
-	.get('/page/:page/limit/:limit', cars.pagination)
 	.post('/', cars.add)
 	.patch('/:id', cars.update)
 	.delete('/:id', cars.delete)
