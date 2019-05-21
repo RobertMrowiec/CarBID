@@ -5,6 +5,9 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 module.exports.generateToken = async () => {
-    const user = await new User({email: 'token@herecars.com', password: 'qwe123', name: 'token'}).save()
-    return jwt.sign({user: user._id}, process.env.privateKey)
+	const user = await new User({email: 'token@herecars.com', password: 'qwe123', name: 'token'}).save()
+	return {
+		token: jwt.sign({user: user._id}, process.env.privateKey),
+		userId: user._id
+	}
 }

@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const auctions = require('./details')
+const images = require('./details')
 const multer  = require('multer')
 
 const storage = multer.diskStorage({
@@ -11,13 +11,9 @@ const storage = multer.diskStorage({
 		cb(null, `file-${Date.now()}.${file.originalname.split('.')[1]}`)
 	}
 })
+  
 const upload = multer({ storage: storage })
   
-router.get('/', auctions.pagination)
-	.get('/:id', auctions.getById)
-	.post('/', upload.single('image'), auctions.add)
-	.post('/search', auctions.search)
-	.patch('/:id', auctions.update)
-	.delete('/:id', auctions.delete)
+router.post('/', upload.single('file'), images.add)
 
 module.exports = router

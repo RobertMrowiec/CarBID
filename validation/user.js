@@ -1,9 +1,10 @@
-const Joi = require('joi');
+const Joi = require('joi')
 
 const userValidate = (body) => {
 	const UserSchema = Joi.object().keys({
 		password: Joi.string().min(6),
-		email: Joi.string().regex(/([a-zA-Z0-9.-])\w+[@]+(herecars.com)$/)
+		email: Joi.string().regex(/([a-zA-Z0-9.-])\w+[@]+(herecars.com)$/),
+		name: Joi.string().required()
 	}).unknown()
 
 	return Joi.validate(body, UserSchema)

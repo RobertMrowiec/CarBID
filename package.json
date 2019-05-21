@@ -2,9 +2,9 @@
   "name": "carbid",
   "version": "0.0.1",
   "description": "application where user can sell or bid a car",
-  "main": "app.js",
+  "main": "carbid.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest --forceExit"
   },
   "repository": {
     "type": "git",
@@ -31,9 +31,12 @@
     "jsonapi-serializer": "^3.6.4",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.4.20",
+    "multer": "^1.4.1",
     "node-fetch": "^2.3.0"
   },
   "devDependencies": {
-    "jest": "^24.5.0"
+    "jest": "^24.5.0",
+    "jest-dev-server": "^4.1.1",
+    "supertest": "^4.0.2"
   }
 }
