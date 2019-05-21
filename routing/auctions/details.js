@@ -8,9 +8,8 @@ exports.getById = defaultResponse(async req => auctionSerialize( await Auction.f
 
 exports.pagination = defaultResponse(async req => {
 	const { userId, page } = req.query
+	const { number, size } = +page
 	const match = userId ? { user: userId } : {}
-	const number = +page.number
-	const size = +page.size
 	const collectionLength = userId ? Auction.countDocuments(match) : Auction.countDocuments()
 	const totalPages = Math.ceil( await collectionLength / size)
 
@@ -33,8 +32,7 @@ exports.search = defaultResponse(async req => {
 	const { userId, page } = req.query
 	const searchQuery = { name: { $regex: new RegExp(req.body.search, 'i') } }
 	const match = userId ? { $and: [{ user: userId }, searchQuery] } : searchQuery
-	const number = +page.number
-	const size = +page.size
+	const { number, size} = +page
 
 	const totalPages = Math.ceil(await Auction.countDocuments(match) / size)
 
@@ -56,10 +54,9 @@ exports.search = defaultResponse(async req => {
 
 exports.add = defaultResponse(async req => {
 	const body = _setBody(req)
+	const { file } = req
 	
-	if (req.file) {
-		body.image = `http://localhost:8008/${req.file.path}`
-	}
+	if (file)	body.image = `http://localhost:8008/${req.file.path}`
 
 	const result = await auctionValidate(body)
 	return !result.length ? new Auction(body).save().then(data => auctionSerialize(data)) : result
@@ -67,10 +64,9 @@ exports.add = defaultResponse(async req => {
 
 exports.update = defaultResponse(async req => {
 	const body = _setBody(req)
-
-	if (req.file) {
-		body.image = `http://localhost:8008/${req.file.path}`
-	}
+	
+	const { file } = req
+	if (file)	body.image = `http://localhost:8008/${req.file.path}`
 
 	const result = await auctionValidate(body)
 	return !result.length ? Auction.findByIdAndUpdate(req.params.id, body, {new: true}).then(data => auctionSerialize(data)) : result
@@ -84,5 +80,6 @@ function _setBody(req) {
 	
 	data.attributes.endDate = data.attributes['end-date']
 	
-	return { ...data.attributes, car: car.data.id, user: user.data.id }
+	const { attributes } = data
+	return { ...attributes, car: car.data.id, user: user.data.id }
 }	

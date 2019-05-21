@@ -8,7 +8,8 @@ exports.get = defaultResponse(() => Car.find().limit(3))
 exports.getById = defaultResponse(req => Car.findById(req.params.id).then(car => carSerialize(car)))
 
 exports.pagination = defaultResponse(req => {
-	const limit = Number(req.params.limit)
+	const { limit } = +req.params
+	
 	return Car.find().skip(limit * (req.params.page - 1)).limit(limit)
 })
 
