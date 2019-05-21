@@ -8,11 +8,12 @@ exports.getById = defaultResponse(async req => auctionSerialize( await Auction.f
 
 exports.pagination = defaultResponse(async req => {
 	const { userId, page } = req.query
-	const { number, size } = +page
+	const size = +page.size
+	const number = +page.number
 	const match = userId ? { user: userId } : {}
 	const collectionLength = userId ? Auction.countDocuments(match) : Auction.countDocuments()
 	const totalPages = Math.ceil( await collectionLength / size)
-
+	
 	const links = {
 		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
 		first: `${url(req)}/api/auctions?page[number]=1&page[size]=${size}`,
@@ -53,23 +54,14 @@ exports.search = defaultResponse(async req => {
 })
 
 exports.add = defaultResponse(async req => {
-	const body = _setBody(req)
-	const { file } = req
-	
-	if (file)	body.image = `http://localhost:8008/${req.file.path}`
-
-	const result = await auctionValidate(body)
+	const { body, result} = await _prepareAuctionObject(req)
 	return !result.length ? new Auction(body).save().then(data => auctionSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
-	const body = _setBody(req)
-	
-	const { file } = req
-	if (file)	body.image = `http://localhost:8008/${req.file.path}`
-
-	const result = await auctionValidate(body)
-	return !result.length ? Auction.findByIdAndUpdate(req.params.id, body, {new: true}).then(data => auctionSerialize(data)) : result
+	const { params: { id } } = req
+	const { body, result} = await _prepareAuctionObject(req)
+	return !result.length ? Auction.findByIdAndUpdate(id, body, { new: true }).then(data => auctionSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Auction.findByIdAndDelete(req.params.id))
@@ -83,3 +75,13 @@ function _setBody(req) {
 	const { attributes } = data
 	return { ...attributes, car: car.data.id, user: user.data.id }
 }	
+
+function _prepareAuctionObject(req) {
+	const body = _setBody(req)
+
+	const { file } = req
+	
+	if (file)	body.image = `http://localhost:8008/${req.file.path}`
+
+	return auctionValidate(body)
+}

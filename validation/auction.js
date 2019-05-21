@@ -10,9 +10,12 @@ const auctionValidate = (body) => {
 		user: Joi.string().required()
 	}).unknown()
 
-	return Joi.validate(body, AuctionSchema)
-		.then(validationResult => validationResult)
-		.catch(validationError => validationError.details.map(d => d.message))
+	return {
+		body,
+		result: Joi.validate(body, AuctionSchema)
+			.then(validationResult => validationResult)
+			.catch(validationError => validationError.details.map(d => d.message))
+	}
 }
 
 module.exports.auctionValidate = auctionValidate

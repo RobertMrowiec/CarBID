@@ -13,17 +13,17 @@ exports.pagination = defaultResponse(req => {
 })
 
 exports.add = defaultResponse(async req => {
-	const { body } = req
-	_setBody(body)
-	const result = await carValidate(body)
-	return !result.length ? new Car(body).save().then(data => carSerialize(data)) : result
+	let { body } = req
+	const { result, parsedBody } = await _setBody(body)
+
+	return !result.length ? new Car(parsedBody).save().then(data => carSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
 	const { body, params: { id } } = req
-	_setBody(body)
-	const result = await carValidate(body)
-	return !result.length ? Car.findByIdAndUpdate(id, body, {new: true}).then(data => carSerialize(data)) : result
+	const { result, parsedBody } = await _setBody(body)
+
+	return !result.length ? Car.findByIdAndUpdate(id, parsedBody, { new: true }).then(data => carSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))
@@ -33,4 +33,6 @@ function _setBody(body) {
 	body.horsePower = +body['horse-power']
 	body.maxTorque = +body['max-torque']
 	body.assembledAt = new Date(body['assembled-at']).toISOString().substr(0,10)
+
+	return carValidate(body)
 }
