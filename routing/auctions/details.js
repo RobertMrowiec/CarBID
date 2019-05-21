@@ -25,10 +25,13 @@ exports.pagination = defaultResponse(async req => {
 	if (userId) for (key of Object.keys(links)) {
 		if (links[key]) links[key] += `&user=${userId}`
 	}
-	
+
 	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
 
+exports.search = defaultResponse(req => {
+	return Auction.find({name: { $regex: new RegExp(req.body.search, 'i')}}).exec()
+})
 exports.add = defaultResponse(async req => {
 	const body = setBody(req)
 	
