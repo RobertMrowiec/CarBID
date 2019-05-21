@@ -29,9 +29,31 @@ exports.pagination = defaultResponse(async req => {
 	return auctionSerialize(await Auction.find(match).sort('-endDate').populate('car').skip(size * (number - 1)).limit(size), links, { 'total': totalPages })
 })
 
-exports.search = defaultResponse(req => {
-	return Auction.find({name: { $regex: new RegExp(req.body.search, 'i')}}).exec()
+exports.search = defaultResponse(async req => {
+	const { userId, page } = req.query
+	const searchQuery = { name: { $regex: new RegExp(req.body.search, 'i') } }
+	const match = userId ? { $and: [{ user: userId }, searchQuery] } : searchQuery
+	const number = +page.number
+	const size = +page.size
+
+	const totalPages = Math.ceil(await Auction.countDocuments(match) / size)
+
+	const links = {
+		self: `${url(req)}/api/auctions?page[number]=${number}&page[size]=${size}`,
+		first: `${url(req)}/api/auctions?page[number]=1&page[size]=${size}`,
+		prev: number - 1 < 1 ? null : `${url(req)}/api/auctions?page[number]=${number - 1}&page[size]=${size}`,
+		next: number + 1 > totalPages ? null : `${url(req)}/api/auctions?page[number]=${number + 1}&page[size]=${size}`,
+		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${size}`
+	}
+
+	return auctionSerialize(await Auction.find(match)
+		.sort('-endDate')
+		.populate('car')
+		.skip(size * (number - 1))
+		.limit(size)
+		.exec(), links, { 'total': totalPages })
 })
+
 exports.add = defaultResponse(async req => {
 	const body = setBody(req)
 	
