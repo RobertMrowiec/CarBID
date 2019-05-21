@@ -9,28 +9,28 @@ exports.getById = defaultResponse(req => Car.findById(req.params.id).then(car =>
 
 exports.pagination = defaultResponse(req => {
 	const { limit } = +req.params
-	
 	return Car.find().skip(limit * (req.params.page - 1)).limit(limit)
 })
 
 exports.add = defaultResponse(async req => {
-	_setBody(req)
-	const result = await carValidate(req.body)
-	return !result.length ? new Car(req.body).save().then(data => carSerialize(data)) : result
+	const { body } = req
+	_setBody(body)
+	const result = await carValidate(body)
+	return !result.length ? new Car(body).save().then(data => carSerialize(data)) : result
 })
 
 exports.update = defaultResponse(async req => {
-	_setBody(req)
-
-	const result = await carValidate(req.body)
-	return !result.length ? Car.findByIdAndUpdate(req.params.id, req.body, {new: true}).then(data => carSerialize(data)) : result
+	const { body } = req
+	_setBody(body)
+	const result = await carValidate(body)
+	return !result.length ? Car.findByIdAndUpdate(req.params.id, body, {new: true}).then(data => carSerialize(data)) : result
 })
 
 exports.delete = defaultResponse(req => Car.findByIdAndDelete(req.params.id))
 
-function _setBody(req) {
-	req.body = req.body.data.attributes
-	req.body.horsePower = +req.body['horse-power']
-	req.body.maxTorque = +req.body['max-torque']
-	req.body.assembledAt = new Date(req.body['assembled-at']).toISOString().substr(0,10)
+function _setBody(body) {
+	body = body.data.attributes
+	body.horsePower = +body['horse-power']
+	body.maxTorque = +body['max-torque']
+	body.assembledAt = new Date(body['assembled-at']).toISOString().substr(0,10)
 }
