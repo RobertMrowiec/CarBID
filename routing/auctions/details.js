@@ -25,7 +25,6 @@ exports.pagination = defaultResponse(async req => {
 		last: `${url(req)}/api/auctions?page[number]=${totalPages}&page[size]=${parsedSize}`
 	}
 
-
 	if (userId) for (key of Object.keys(links)) {
 		if (links[key]) links[key] += `&user=${userId}`
 	}
