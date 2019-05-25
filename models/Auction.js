@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const AuctionSchema = new Schema({
 	car: { type: Schema.Types.ObjectId, ref: 'Car', required: true},
 	description: { type: String, required: true },
-	endDate: String,
+	endDate: Date,
 	image: { type: String, required: true },
 	minimalPrice: Number,
 	name: { type: String, required: true },

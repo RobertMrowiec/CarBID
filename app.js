@@ -8,6 +8,7 @@ const app = express()
 dotenv.config()
 
 app.use(cors('*'))
+app.use(bodyParser.urlencoded({ extended: true, defaultCharset: 'utf-8' }))
 app.use(bodyParser.json())
 
 app.use((req, res, next) => auth(req, res, next))

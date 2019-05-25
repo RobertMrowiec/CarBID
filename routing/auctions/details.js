@@ -50,6 +50,7 @@ function _setBody(req) {
 	const { relationships: { car, user} } = data
 	
 	data.attributes.endDate = data.attributes['end-date']
+	data.attributes.minimalPrice = data.attributes['minimal-price']
 	
 	const { attributes } = data
 	return { ...attributes, car: car.data.id, user: user.data.id }

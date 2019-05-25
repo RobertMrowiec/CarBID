@@ -9,6 +9,10 @@ function auctionSerialize(data, topLevelLinks, meta) {
 			ref: '_id',
 			nullIdMissing: true
 		},
+		offer: {
+			ref: '_id',
+			nullIdMissing: true
+		},
 		user: {
 			ref: '_id',
 			nullIdMissing: true
